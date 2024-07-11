@@ -1,0 +1,21 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: pod-test
+spec:
+  bindings:
+    - name: port
+      value: 80
+    - name: dc
+      value: west
+    - name: env
+      value: sandbox
+  steps:
+    - try:
+        - apply:
+            timeout: 1m
+            file: pod-001.yaml
+            # use an URL
+            # file: https://raw.githubusercontent.com/kyverno/chainsaw/main/testdata/step/configmap.yaml
+        - assert:
+            file: expected.yaml

@@ -33,8 +33,8 @@ install:
 chainsaw:
 	chainsaw test ./chainsaw/1-rbac-test
 
-2:
-	chainsaw test ./chainsaw/2-test
+%:
+	chainsaw test ./chainsaw/$(*)-test
 
 include ./.platform/colima.mk
 

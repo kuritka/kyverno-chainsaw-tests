@@ -3,8 +3,20 @@ kind: Test
 metadata:
   name: pod-test
 spec:
+  bindings:
+    - name: namespace
+      value: kube-public
   steps:
     - try:
+        - apply:
+            timeout: 1m
+            resource:
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: (join('-', [$namespace, 'cm']))
+              data:
+                foo: bar
         - assert:
             resource:
               apiVersion: apps/v1
@@ -20,11 +32,3 @@ spec:
                     # the `~` modifier tells Chainsaw to iterate over the array elements
                     ~.(containers):
                       securityContext: { }
-#  steps:
-#    - try:
-#        # create resources in the cluster
-#        - apply:
-#            file: pod-001.yaml
-#        # verify the operator reacted as expected
-#        - assert:
-#            file: expected.yaml
