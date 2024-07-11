@@ -1,0 +1,30 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: pod-test
+spec:
+  steps:
+    - try:
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                labels:
+                  k8s-app: kube-dns
+                namespace: kube-system
+              spec:
+                (replicas >= `1` && replicas < `4`): true
+                template:
+                  spec:
+                    # the `~` modifier tells Chainsaw to iterate over the array elements
+                    ~.(containers):
+                      securityContext: { }
+#  steps:
+#    - try:
+#        # create resources in the cluster
+#        - apply:
+#            file: pod-001.yaml
+#        # verify the operator reacted as expected
+#        - assert:
+#            file: expected.yaml

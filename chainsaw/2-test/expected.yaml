@@ -1,0 +1,20 @@
+spec:
+  template: true
+  bindings:
+    - name: dc
+      value: west
+    - name: env
+      value: sandbox
+  steps:
+    - try:
+        - apply:
+            file: ./pod-001.yaml
+        - assert:
+            file: ./expected.yaml
+      catch:
+        #     - get:
+        #         resource: managed
+        - describe:
+            resource: pod
+            name: pod-001
+            namespace: $NAMESPACE

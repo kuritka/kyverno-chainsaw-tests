@@ -1,0 +1,22 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: clusterrolebindings
+spec:
+  steps:
+    - try:
+        # create resources in the cluster
+        - apply:
+            file: resources.yaml
+        # verify the operator reacted as expected
+        - assert:
+            file: expected.yaml
+        # delete previously created resources
+        - delete:
+            ref:
+              apiVersion: rbacmanager.reactiveops.io/v1beta1
+              kind: RBACDefinition
+              name: rbac-manager-definition
+        # make sure expected resources have been deleted
+        - error:
+            file: expected.yaml
