@@ -8,15 +8,6 @@ spec:
       value: kube-public
   steps:
     - try:
-        - apply:
-            timeout: 1m
-            resource:
-              apiVersion: v1
-              kind: ConfigMap
-              metadata:
-                name: (join('-', [$namespace, 'cm']))
-              data:
-                foo: bar
         - assert:
             resource:
               apiVersion: apps/v1
